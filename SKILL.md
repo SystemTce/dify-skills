@@ -13,7 +13,41 @@ tags:
   - rag
   - agent
 dependencies: []
-last_updated: 2026-03-04
+last_updated: 2026-03-05
+triggers:
+  - dify
+  - 工作流
+  - workflow
+  - 插件
+  - plugin
+  - 性能
+  - performance
+  - 安全
+  - security
+  - 集成
+  - integration
+  - api
+  - mcp
+  - 参考
+  - reference
+  - dsl
+  - sdk
+  - cli
+on_demand:
+  # 按需加载条件触发器
+  conditions:
+    - when: "用户提到具体节点类型（如 LLM、Agent、HTTP Request）"
+      load: "01-workflow/SKILL.md"
+    - when: "用户提到插件开发、工具、Provider"
+      load: "02-plugin/SKILL.md"
+    - when: "用户提到性能优化、缓存、并行"
+      load: "03-performance/SKILL.md"
+    - when: "用户提到安全、部署、Docker"
+      load: "04-security/SKILL.md"
+    - when: "用户提到 API、Webhook、MCP、数据库集成"
+      load: "05-integration/SKILL.md"
+    - when: "用户查找语法参考、API 文档、SDK"
+      load: "06-reference/SKILL.md"
 ---
 
 # Dify Master SKILL
@@ -161,6 +195,8 @@ class MyTool(Tool):
 
 **适用场景**: 设计和开发 Dify 工作流
 
+**触发关键词**: `节点`, `LLM`, `Agent`, `工作流`, `变量`, `知识检索`, `HTTP Request`, `Code`, `If-Else`, `Iteration`, `模板`, `DSL`, `YAML`
+
 **核心内容**:
 - 10+ 节点类型详解 (Start, LLM, Agent, Knowledge Retrieval, Code, HTTP Request, Tool, If-Else, Iteration, Answer)
 - 5 种设计模式 (顺序管道、条件分支、迭代处理、知识检索、多源聚合)
@@ -177,6 +213,8 @@ class MyTool(Tool):
 ### 02. 插件开发 SKILL
 
 **适用场景**: 开发自定义工具、模型、数据源插件
+
+**触发关键词**: `插件`, `plugin`, `Tool`, `Provider`, `开发`, `manifest`, `OAuth`, `数据源`, `模型`, `扩展`
 
 **核心内容**:
 - 4 种插件类型 (Tool, Model, Datasource, Extension)
@@ -196,6 +234,8 @@ class MyTool(Tool):
 
 **适用场景**: 优化工作流和插件的执行性能
 
+**触发关键词**: `性能`, `performance`, `优化`, `缓存`, `并行`, `延迟`, `吞吐量`, `监控`, `benchmark`
+
 **核心内容**:
 - 工作流优化 (图结构、并行执行、变量池)
 - LLM 优化 (模型选择、Prompt 工程、缓存、结构化输出)
@@ -212,6 +252,8 @@ class MyTool(Tool):
 ### 04. 安全和部署 SKILL
 
 **适用场景**: 生产环境部署和安全加固
+
+**触发关键词**: `安全`, `security`, `部署`, `deploy`, `Docker`, `Kubernetes`, `SSL`, `认证`, `授权`, `沙箱`, `SSRF`
 
 **核心内容**:
 - 安全实践 (SSRF 防护、沙箱隔离、数据加密、认证授权)
@@ -230,6 +272,8 @@ class MyTool(Tool):
 
 **适用场景**: 与外部系统和服务集成
 
+**触发关键词**: `集成`, `integration`, `API`, `Webhook`, `MCP`, `Server`, `Client`, `数据库`, `Redis`, `消息队列`, `RabbitMQ`, `Kafka`, `S3`
+
 **核心内容**:
 - API 集成 (REST API, Webhook, Streaming)
 - MCP 协议 (MCP Server, MCP Client, 双向通信)
@@ -246,6 +290,8 @@ class MyTool(Tool):
 ### 06. 参考资料 SKILL
 
 **适用场景**: 查找语法、API、CLI 等参考信息
+
+**触发关键词**: `参考`, `reference`, `API`, `SDK`, `CLI`, `DSL`, `YAML`, `命令`, `文档`, `语法`
 
 **核心内容**:
 - DSL 语法参考 (完整的 YAML 结构和字段说明)
@@ -446,10 +492,11 @@ dify env get <key>                  # 获取环境变量
 
 ## 版本信息
 
-- **当前版本**: v1.0.0
-- **最后更新**: 2026-03-04
+- **当前版本**: v1.1.0
+- **最后更新**: 2026-03-05
 - **Dify 兼容版本**: 0.15.x - 1.9.x
-- **下一版本计划**: v1.1.0 (增加高级主题和更多模板)
+- **更新内容**: 完善 05-integration 和 06-reference SKILL，添加按需加载机制
+- **下一版本计划**: v1.2.0 (增加更多模板和案例)
 
 ---
 
