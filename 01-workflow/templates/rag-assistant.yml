@@ -1,0 +1,204 @@
+app:
+  description: '基于知识库的智能助手 - 使用 RAG (检索增强生成) 技术'
+  icon: 📚
+  icon_background: '#E3F2FD'
+  mode: advanced-chat
+  name: RAG 知识助手
+  use_icon_as_answer_icon: false
+
+kind: app
+version: 0.1.5
+
+workflow:
+  conversation_variables: []
+  environment_variables: []
+
+  features:
+    file_upload:
+      enabled: false
+    opening_statement: '你好！我可以基于知识库为你提供准确的信息。请问有什么问题吗？'
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    text_to_speech:
+      enabled: false
+    suggested_questions:
+    - '知识库中有哪些内容？'
+    - '如何使用这个功能？'
+    - '有什么最佳实践建议？'
+
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: knowledge-retrieval
+      id: start-knowledge
+      source: start
+      sourceHandle: source
+      target: knowledge
+      targetHandle: target
+      type: custom
+      zIndex: 0
+
+    - data:
+        isInIteration: false
+        sourceType: knowledge-retrieval
+        targetType: llm
+      id: knowledge-llm
+      source: knowledge
+      sourceHandle: source
+      target: llm
+      targetHandle: target
+      type: custom
+      zIndex: 0
+
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: answer
+      id: llm-answer
+      source: llm
+      sourceHandle: source
+      target: answer
+      targetHandle: target
+      type: custom
+      zIndex: 0
+
+    nodes:
+    - data:
+        desc: '工作流的入口节点'
+        selected: false
+        title: 开始
+        type: start
+        variables: []
+      height: 54
+      id: start
+      position:
+        x: 80
+        y: 282
+      positionAbsolute:
+        x: 80
+        y: 282
+      selected: false
+      type: custom
+      width: 244
+
+    - data:
+        dataset_ids:
+        - 'YOUR_DATASET_ID_HERE'  # 替换为你的知识库 ID
+        desc: '从知识库检索相关信息'
+        query_variable_selector:
+        - start
+        - sys.query
+        retrieval_mode: single
+        single_retrieval_config:
+          model:
+            completion_params: {}
+            mode: chat
+            name: text-embedding-3-small
+            provider: openai
+          top_k: 3
+          score_threshold: 0.7
+          reranking_enable: true
+          reranking_mode: reranking_model
+          reranking_model:
+            provider: cohere
+            model: rerank-english-v2.0
+        selected: false
+        title: 知识检索
+        type: knowledge-retrieval
+      height: 98
+      id: knowledge
+      position:
+        x: 384
+        y: 282
+      positionAbsolute:
+        x: 384
+        y: 282
+      selected: false
+      type: custom
+      width: 244
+
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - knowledge
+          - result
+        desc: '基于检索结果生成回答'
+        model:
+          completion_params:
+            temperature: 0.3
+            max_tokens: 2000
+            top_p: 1
+            frequency_penalty: 0
+            presence_penalty: 0
+          mode: chat
+          name: gpt-4
+          provider: openai
+        prompt_template:
+        - id: system
+          role: system
+          text: |
+            你是一个专业的知识助手。你的任务是:
+            1. 基于提供的上下文信息回答用户问题
+            2. 如果上下文中没有相关信息，诚实地告知用户
+            3. 引用具体的信息来源，增强回答的可信度
+            4. 保持回答的准确性和专业性
+            5. 如果需要，可以提供额外的解释和建议
+
+            上下文信息:
+            {{#context#}}
+        - id: user
+          role: user
+          text: "{{#sys.query#}}"
+        selected: false
+        title: LLM
+        type: llm
+        vision:
+          enabled: false
+        memory:
+          role_prefix:
+            assistant: ''
+            user: ''
+          window:
+            enabled: true
+            size: 10
+      height: 98
+      id: llm
+      position:
+        x: 688
+        y: 282
+      positionAbsolute:
+        x: 688
+        y: 282
+      selected: false
+      type: custom
+      width: 244
+
+    - data:
+        answer: '{{#llm.text#}}'
+        desc: '输出最终结果'
+        selected: false
+        title: 回答
+        type: answer
+      height: 107
+      id: answer
+      position:
+        x: 992
+        y: 282
+      positionAbsolute:
+        x: 992
+        y: 282
+      selected: false
+      type: custom
+      width: 244
+
+    viewport:
+      x: 0
+      y: 0
+      zoom: 1

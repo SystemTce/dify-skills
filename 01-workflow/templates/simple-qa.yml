@@ -1,0 +1,133 @@
+app:
+  description: '简单的问答工作流模板 - 最基础的 Dify 工作流示例'
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: 简单问答
+  use_icon_as_answer_icon: false
+
+kind: app
+version: 0.1.5
+
+workflow:
+  conversation_variables: []
+  environment_variables: []
+
+  features:
+    file_upload:
+      enabled: false
+    opening_statement: '你好！我是你的 AI 助手，有什么可以帮你的吗？'
+    retriever_resource:
+      enabled: false
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    text_to_speech:
+      enabled: false
+
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        sourceType: start
+        targetType: llm
+      id: start-llm
+      source: start
+      sourceHandle: source
+      target: llm
+      targetHandle: target
+      type: custom
+      zIndex: 0
+
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: answer
+      id: llm-answer
+      source: llm
+      sourceHandle: source
+      target: answer
+      targetHandle: target
+      type: custom
+      zIndex: 0
+
+    nodes:
+    - data:
+        desc: '工作流的入口节点'
+        selected: false
+        title: 开始
+        type: start
+        variables: []
+      height: 54
+      id: start
+      position:
+        x: 80
+        y: 282
+      positionAbsolute:
+        x: 80
+        y: 282
+      selected: false
+      type: custom
+      width: 244
+
+    - data:
+        context:
+          enabled: false
+        desc: '调用大语言模型进行回答'
+        model:
+          completion_params:
+            temperature: 0.7
+            max_tokens: 2000
+            top_p: 1
+            frequency_penalty: 0
+            presence_penalty: 0
+          mode: chat
+          name: gpt-4
+          provider: openai
+        prompt_template:
+        - id: system
+          role: system
+          text: "你是一个友好、专业的 AI 助手。你的任务是:\n1. 理解用户的问题\n2. 提供准确、有帮助的回答\n3. 保持礼貌和专业的语气\n4. 如果不确定答案，诚实地告知用户"
+        - id: user
+          role: user
+          text: "{{#sys.query#}}"
+        selected: false
+        title: LLM
+        type: llm
+        vision:
+          enabled: false
+      height: 98
+      id: llm
+      position:
+        x: 384
+        y: 282
+      positionAbsolute:
+        x: 384
+        y: 282
+      selected: false
+      type: custom
+      width: 244
+
+    - data:
+        answer: '{{#llm.text#}}'
+        desc: '输出最终结果'
+        selected: false
+        title: 回答
+        type: answer
+      height: 107
+      id: answer
+      position:
+        x: 688
+        y: 282
+      positionAbsolute:
+        x: 688
+        y: 282
+      selected: false
+      type: custom
+      width: 244
+
+    viewport:
+      x: 0
+      y: 0
+      zoom: 1

@@ -1,0 +1,40 @@
+author: your_name
+name: my_tool
+version: 0.0.1
+type: plugin
+
+description:
+  en_US: My tool plugin description
+  zh_Hans: 我的工具插件描述
+
+label:
+  en_US: My Tool
+  zh_Hans: 我的工具
+
+icon: icon.svg
+
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: '3.12'
+    entrypoint: main
+
+plugins:
+  tools:
+    - provider/my_provider.yaml
+
+resource:
+  memory: 1048576
+  permission:
+    tool:
+      enabled: true
+    model:
+      enabled: true
+      llm: true
+
+tags:
+  - utilities
